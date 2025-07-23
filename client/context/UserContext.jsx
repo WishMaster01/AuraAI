@@ -5,7 +5,7 @@ import React, { createContext, useEffect, useState } from "react";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl = "http://localhost:8080";
+  const serverUrl = "https://auraai-server.onrender.com";
 
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);

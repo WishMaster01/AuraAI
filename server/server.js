@@ -13,15 +13,17 @@ import geminiResponse from "./gemini.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const allowedOrigins = ["http://localhost:5173"];
+const corsOptions = {
+  origin: 'https://auraai-client.onrender.com', 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, 
+  optionsSuccessStatus: 204
+};
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
+  cors(corsOptions)
 );
 
 app.use("/api/auth", authRouter);

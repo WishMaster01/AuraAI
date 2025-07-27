@@ -5,8 +5,8 @@ import React, { createContext, useEffect, useState } from "react";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl =
-    import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
+  // CORRECTED: Use VITE_ prefix for Vite environment variables
+  const serverUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"; // Fallback for local dev
 
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);
@@ -20,17 +20,28 @@ function UserContext({ children }) {
       });
       setUserData(result.data);
     } catch (error) {
-      console.log("User fetch error:", error.message);
+      // Log the full error object for better debugging, especially if it's a 500
+      console.error("User fetch error:", error);
+      // You might want to clear user data or redirect to login on certain errors (e.g., 401)
+      if (error.response && error.response.status === 401) {
+        console.log(
+          "User not authenticated, redirecting to login (or clearing data)."
+        );
+        setUserData(null); // Clear user data if not authenticated
+        // Add navigation/redirect logic here if using react-router-dom
+        // Example: navigate('/login');
+      }
     }
   };
 
   const getGeminiResponse = async (command) => {
     if (!userData) {
-      console.warn("User data not loaded yet.");
+      console.warn("User data not loaded yet for Gemini request.");
       return {
         type: "general",
         userInput: command,
-        response: "User data not loaded yet.",
+        response:
+          "User data not loaded yet. Please try again after logging in.",
       };
     }
 
@@ -48,7 +59,8 @@ function UserContext({ children }) {
     } catch (error) {
       console.error(
         "Gemini Request Error:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
+        error // Log the full error object
       );
       return {
         type: "general",
@@ -61,7 +73,7 @@ function UserContext({ children }) {
 
   useEffect(() => {
     handleCurrentUser();
-  }, []);
+  }, []); // Run once on mount to fetch user data
 
   const value = {
     serverUrl,
@@ -74,6 +86,7 @@ function UserContext({ children }) {
     selectedImage,
     setSelectedImage,
     getGeminiResponse,
+    handleCurrentUser, // Expose this if you need to manually refetch user data
   };
 
   return (

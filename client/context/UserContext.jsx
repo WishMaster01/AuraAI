@@ -5,8 +5,8 @@ import React, { createContext, useEffect, useState } from "react";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  // CORRECTED: Use VITE_ prefix for Vite environment variables
-  const serverUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"; // Fallback for local dev
+  const serverUrl =
+    import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);

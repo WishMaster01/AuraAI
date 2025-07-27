@@ -13,10 +13,7 @@ import geminiResponse from "./gemini.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://auraai-lm91.onrender.com",
-];
+const allowedOrigins = ["http://localhost:5173"];
 
 app.use(express.json());
 app.use(cookieParser());

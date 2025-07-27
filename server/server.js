@@ -17,7 +17,7 @@ const allowedClientOrigin =
   process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
 const corsOptions = {
-  origin: allowedClientOrigin,
+  origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,

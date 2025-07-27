@@ -6,6 +6,8 @@ import User from "../models/user.model.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
+    console.log("userId from req in getCurrentUser:", req.userId);
+
     const userId = req.userId;
     const user = await User.findById(userId).select("-password");
 
@@ -15,7 +17,7 @@ export const getCurrentUser = async (req, res) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
+    console.error("Error in getCurrentUser catch block:", error);
     return res.status(500).json({ message: "GET CURRENT USER ERROR" });
   }
 };

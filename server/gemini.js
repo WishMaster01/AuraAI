@@ -3,13 +3,12 @@ import axios from "axios";
 
 const geminiResponse = async (command, assistantName, userName) => {
   try {
-    const GEMINI_API_URL = process.env.GEMINI_API_URL;
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY || ""; // Default to empty string for Canvas
+    const GEMINI_MODEL = "gemini-2.0-flash"; // Use the model provided by Canvas
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-    if (!GEMINI_API_URL || !GEMINI_API_KEY) {
-      console.error(
-        "Missing GEMINI_API_URL or GEMINI_API_KEY environment variables!"
-      );
+    if (!GEMINI_API_KEY) {
+      console.error("Missing GEMINI_API_KEY environment variable!");
       return {
         type: "general",
         response:
@@ -18,6 +17,7 @@ const geminiResponse = async (command, assistantName, userName) => {
       };
     }
 
+    // PROMPT IS DECLARED AND ASSIGNED HERE
     const prompt = `You are a virtual assistant named ${
       assistantName || "Assistant"
     }, created by ${userName || "the user"}.
@@ -43,25 +43,51 @@ Rules:
 User input: "${command}"
 Now reply.`.trim();
 
-    const response = await axios.post(
-      GEMINI_API_URL,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    // NOW IT'S SAFE TO USE 'prompt'
+    console.log("Constructed Gemini API URL:", GEMINI_API_URL);
+    console.log("Prompt being sent to Gemini:", prompt);
+
+    const payload = {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt,
+            },
+          ],
         },
-      }
+      ],
+    };
+
+    const response = await axios.post(GEMINI_API_URL, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(
+      "Raw Gemini API Response Data:",
+      JSON.stringify(response.data, null, 2)
     );
+
+    if (
+      !response.data ||
+      !response.data.candidates ||
+      response.data.candidates.length === 0 ||
+      !response.data.candidates[0].content ||
+      !response.data.candidates[0].content.parts ||
+      response.data.candidates[0].content.parts.length === 0
+    ) {
+      console.error(
+        "Gemini response structure is unexpected or empty:",
+        response.data
+      );
+      return {
+        type: "general",
+        response: "I received an empty or malformed response from the AI.",
+        userInput: command,
+      };
+    }
 
     let geminiRawText = response.data.candidates[0].content.parts[0].text;
 
@@ -76,7 +102,7 @@ Now reply.`.trim();
 
     try {
       const parsedGeminiResponse = JSON.parse(geminiRawText);
-      return parsedGeminiResponse; // Return the parsed JSON object
+      return parsedGeminiResponse;
     } catch (parseError) {
       console.error("Failed to parse Gemini's response as JSON:", parseError);
       console.error("Raw text that failed to parse:", geminiRawText);
@@ -90,12 +116,12 @@ Now reply.`.trim();
   } catch (error) {
     console.error("Error communicating with Google Gemini API:");
     if (error.response) {
-      console.error("  Status:", error.response.status);
-      console.error("  Data:", error.response.data);
+      console.error("   Status:", error.response.status);
+      console.error("   Data:", error.response.data);
     } else if (error.request) {
-      console.error("  No response received. Request:", error.request);
+      console.error("   No response received. Request:", error.request);
     } else {
-      console.error("  Error message:", error.message);
+      console.error("   Error message:", error.message);
     }
 
     return {

@@ -13,10 +13,8 @@ import geminiResponse from "./gemini.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Use an environment variable for the allowed client origin
-// Fallback to a development URL if CLIENT_ORIGIN is not set (e.g., for local testing)
 const allowedClientOrigin =
-  process.env.CLIENT_ORIGIN || "http://localhost:5173"; // Adjust localhost port if your frontend dev server runs on a different one
+  process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
 const corsOptions = {
   origin: allowedClientOrigin,

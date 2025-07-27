@@ -6,7 +6,7 @@ export const userDataContext = createContext();
 
 function UserContext({ children }) {
   const serverUrl =
-    process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
+    import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);

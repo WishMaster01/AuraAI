@@ -5,8 +5,7 @@ import React, { createContext, useEffect, useState } from "react";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl =
-    import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
+  const serverUrl = "https://auraai-2m5o.onrender.com";
 
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);

@@ -13,16 +13,21 @@ import geminiResponse from "./gemini.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const allowedOrigins = ["http://localhost:5173"];
+// Use an environment variable for the allowed client origin
+// Fallback to a development URL if CLIENT_ORIGIN is not set (e.g., for local testing)
+const allowedClientOrigin =
+  process.env.CLIENT_ORIGIN || "http://localhost:5173"; // Adjust localhost port if your frontend dev server runs on a different one
+
+const corsOptions = {
+  origin: allowedClientOrigin,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
@@ -36,4 +41,5 @@ app.get("/", async (req, res) => {
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is currently running on http://localhost:${PORT}`);
+  console.log(`CORS allowed origin: ${allowedClientOrigin}`);
 });

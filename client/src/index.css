@@ -1,3 +1,269 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap");
 
 @import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --aura-ink: #f8fafc;
+  --aura-muted: #94a3b8;
+  --aura-line: rgba(148, 163, 184, 0.18);
+  --aura-panel: rgba(15, 23, 42, 0.72);
+  --aura-panel-strong: rgba(2, 6, 23, 0.86);
+  --aura-cyan: #22d3ee;
+  --aura-blue: #3b82f6;
+  --aura-teal: #2dd4bf;
+  --aura-rose: #fb7185;
+  --aura-amber: #fbbf24;
+  --leading-body: 1.6;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, #020617 0%, #08111f 38%, #03191b 72%, #020617 100%);
+  background-attachment: fixed;
+  background-size: 44px 44px, 44px 44px, auto;
+  color: var(--aura-ink);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: var(--leading-body);
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+textarea,
+select,
+button {
+  font-size: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+:focus-visible {
+  outline: 2px solid var(--aura-cyan);
+  outline-offset: 3px;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes aura-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aura-scan {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes aura-pulse-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(34, 211, 238, 0);
+  }
+}
+
+.animate-text-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.aura-heading {
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+}
+
+.aura-gradient-text {
+  background: linear-gradient(90deg, #f8fafc, #67e8f9 42%, #2dd4bf 72%, #fbbf24);
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+}
+
+.aura-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+.aura-page::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(34, 211, 238, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0), rgba(2, 6, 23, 0.52));
+}
+
+.aura-glass {
+  border: 1px solid var(--aura-line);
+  background:
+    linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(8, 13, 25, 0.54)),
+    rgba(15, 23, 42, 0.56);
+  box-shadow:
+    0 20px 80px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.aura-border {
+  position: relative;
+}
+
+.aura-border::before {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  content: "";
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.46), rgba(45, 212, 191, 0.18), rgba(251, 191, 36, 0.22));
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.aura-border:hover::before,
+.aura-border:focus-within::before {
+  opacity: 1;
+}
+
+.aura-card {
+  border: 1px solid var(--aura-line);
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.62);
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.aura-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(34, 211, 238, 0.42);
+  background: rgba(15, 23, 42, 0.82);
+  box-shadow: 0 20px 60px rgba(8, 145, 178, 0.14);
+}
+
+.aura-input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 0.5rem;
+  background: rgba(2, 6, 23, 0.54);
+  color: #f8fafc;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.aura-input::placeholder {
+  color: #64748b;
+}
+
+.aura-input:focus {
+  border-color: rgba(34, 211, 238, 0.58);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.11);
+  background: rgba(2, 6, 23, 0.78);
+  outline: none;
+}
+
+.aura-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.aura-shimmer::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(100deg, transparent 25%, rgba(255, 255, 255, 0.08) 50%, transparent 75%);
+  transform: translateX(-120%);
+  animation: aura-scan 2.8s ease-in-out infinite;
+}
+
+.animate-aura-fade-up {
+  animation: aura-fade-up 500ms ease both;
+}
+
+.animate-aura-pulse-ring {
+  animation: aura-pulse-ring 2.4s ease-in-out infinite;
+}
+
+.aura-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 211, 238, 0.35) transparent;
+}
+
+.aura-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.aura-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

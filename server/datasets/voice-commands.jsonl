@@ -1,0 +1,36 @@
+{"input":"what time is it","intent":"get_time","type":"utility","route":"chat","response":"Current time is shown in the assistant reply."}
+{"input":"summarize this page","intent":"summarize_page","type":"page_action","route":"page","response":"Summarize the current page into key takeaways."}
+{"input":"rewrite this in a professional tone","intent":"rewrite_text","type":"page_action","route":"page","response":"Rewrite the current text in a clear, professional tone."}
+{"input":"translate this into english","intent":"translate_text","type":"page_action","route":"page","response":"Translate the selected content into English."}
+{"input":"open dashboard","intent":"open_dashboard","type":"navigation","route":"system","response":"Opening the dashboard."}
+{"input":"open prompts","intent":"open_prompts","type":"navigation","route":"system","response":"Opening the prompt library."}
+{"input":"save a note","intent":"save_note","type":"page_action","route":"page","response":"Saving this as a note."}
+{"input":"summarize this document","intent":"summarize_document","type":"page_action","route":"page","response":"Summarize the current document into key points."}
+{"input":"explain this code","intent":"code_explain","type":"page_action","route":"page","response":"Explain the code step by step."}
+{"input":"draft an email reply","intent":"draft_email","type":"page_action","route":"page","response":"Draft a concise email reply from this context."}
+{"input":"take meeting notes","intent":"meeting_notes","type":"page_action","route":"page","response":"Turn this into organized meeting notes."}
+{"input":"brainstorm ideas","intent":"brainstorm_ideas","type":"page_action","route":"page","response":"Generate a useful list of ideas."}
+{"input":"make a to-do list","intent":"create_todo","type":"page_action","route":"page","response":"Convert this into a clear task list."}
+{"input":"extract action items","intent":"extract_action_items","type":"page_action","route":"page","response":"Pull out action items and next steps."}
+{"input":"compare these options","intent":"compare_options","type":"page_action","route":"page","response":"Compare the options with pros and cons."}
+{"input":"generate a title","intent":"generate_title","type":"page_action","route":"page","response":"Suggest stronger title ideas."}
+{"input":"analyze this text","intent":"analyze_text","type":"page_action","route":"page","response":"Analyze the text for clarity and structure."}
+{"input":"write a linkedin post","intent":"write_post","type":"page_action","route":"page","response":"Draft a polished social post."}
+{"input":"open about","intent":"open_about","type":"navigation","route":"system","response":"Opening the about page."}
+{"input":"open contact","intent":"open_contact","type":"navigation","route":"system","response":"Opening the contact page."}
+{"input":"open privacy policy","intent":"open_privacy","type":"navigation","route":"system","response":"Opening the privacy policy."}
+{"input":"open legal terms","intent":"open_legal","type":"navigation","route":"system","response":"Opening the legal page."}
+{"input":"calculate 25 times 14","intent":"calculate","type":"utility","route":"chat","response":"Calculate the expression and return the result."}
+{"input":"rewrite this professionally","intent":"rewrite_text","type":"page_action","route":"page","response":"Rewrite this with a professional tone."}
+{"input":"translate this to spanish","intent":"translate_text","type":"page_action","route":"page","response":"Translate the text to Spanish."}
+{"input":"summarize this page","intent":"summarize_page","type":"page_action","route":"page","response":"Summarize the page into concise takeaways."}
+{"input":"generate a reply","intent":"generate_reply","type":"page_action","route":"page","response":"Generate a helpful reply based on the context."}
+{"input":"open settings","intent":"open_settings","type":"navigation","route":"system","response":"Opening settings."}
+{"input":"open assistant","intent":"open_assistant","type":"navigation","route":"system","response":"Opening the assistant."}
+{"input":"open youtube","intent":"open_youtube","type":"navigation","route":"system","response":"Opening YouTube."}
+{"input":"go to youtube","intent":"open_youtube","type":"navigation","route":"system","response":"Opening YouTube."}
+{"input":"launch youtube","intent":"open_youtube","type":"navigation","route":"system","response":"Opening YouTube."}
+{"input":"write a tweet","intent":"write_post","type":"page_action","route":"page","response":"Draft a concise tweet or social post."}
+{"input":"create a checklist","intent":"create_todo","type":"page_action","route":"page","response":"Turn this into a checklist."}
+{"input":"give me headline ideas","intent":"generate_title","type":"page_action","route":"page","response":"Generate headline ideas from this content."}
+{"input":"find the main action items","intent":"extract_action_items","type":"page_action","route":"page","response":"Extract the main action items."}

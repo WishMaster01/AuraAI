@@ -1,37 +1,42 @@
 // UserContext.jsx
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import { requestAssistantReply } from "../services/assistantApi.js";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl = "https://auraai-2m5o.onrender.com";
+  const serverUrl = import.meta.env.VITE_SERVER_URL || "";
+  const api = useMemo(
+    () =>
+      axios.create({
+        baseURL: serverUrl,
+        withCredentials: true,
+      }),
+    [serverUrl]
+  );
 
   const [userData, setUserData] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleCurrentUser = async () => {
+  const handleCurrentUser = useCallback(async () => {
+    setIsAuthLoading(true);
     try {
-      const result = await axios.get(`${serverUrl}/api/user/current`, {
-        withCredentials: true,
-      });
+      const result = await api.get("/api/user/current");
       setUserData(result.data);
     } catch (error) {
-      // Log the full error object for better debugging, especially if it's a 500
-      console.error("User fetch error:", error);
-      // You might want to clear user data or redirect to login on certain errors (e.g., 401)
-      if (error.response && error.response.status === 401) {
-        console.log(
-          "User not authenticated, redirecting to login (or clearing data)."
-        );
-        setUserData(null); // Clear user data if not authenticated
-        // Add navigation/redirect logic here if using react-router-dom
-        // Example: navigate('/login');
+      setUserData(null);
+      if (error?.response?.status !== 401) {
+        console.error("User fetch error:", error);
       }
+    } finally {
+      setIsAuthLoading(false);
     }
-  };
+  }, [api]);
 
   const getGeminiResponse = async (command) => {
     if (!userData) {
@@ -45,19 +50,15 @@ function UserContext({ children }) {
     }
 
     try {
-      const result = await axios.post(
-        `${serverUrl}/api/user/asktoassistant`,
-        {
-          command,
-          assistantName: userData.assistantName || "Assistant",
-          userName: userData.name || "User",
-        },
-        { withCredentials: true }
-      );
-      return result.data;
+      return await requestAssistantReply({
+        api,
+        command,
+        assistantName: userData.assistantName || "Assistant",
+        userName: userData.name || "User",
+      });
     } catch (error) {
       console.error(
-        "Gemini Request Error:",
+        "Assistant Request Error:",
         error.response?.data || error.message,
         error // Log the full error object
       );
@@ -72,12 +73,14 @@ function UserContext({ children }) {
 
   useEffect(() => {
     handleCurrentUser();
-  }, []); // Run once on mount to fetch user data
+  }, [handleCurrentUser]);
 
   const value = {
+    api,
     serverUrl,
     userData,
     setUserData,
+    isAuthLoading,
     frontendImage,
     setFrontendImage,
     backendImage,
@@ -85,7 +88,7 @@ function UserContext({ children }) {
     selectedImage,
     setSelectedImage,
     getGeminiResponse,
-    handleCurrentUser, // Expose this if you need to manually refetch user data
+    handleCurrentUser,
   };
 
   return (

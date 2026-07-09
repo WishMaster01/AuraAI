@@ -1,52 +1,85 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import Signup from "./pages/Signup.jsx";
-import Login from "./pages/Login.jsx";
-import Customize from "./pages/Customize.jsx";
-import { useContext } from "react";
-import { userDataContext } from "../context/UserContext.jsx";
-import Home from "./pages/Home.jsx";
-import Customization from "./pages/Customization.jsx";
+import { Suspense, lazy, useContext } from "react";
+import { userDataContext } from "./context/UserContext.jsx";
+import AppLoader from "./components/AppLoader.jsx";
+
+const Signup = lazy(() => import("./pages/Signup.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Customize = lazy(() => import("./pages/Customize.jsx"));
+const Home = lazy(() => import("./pages/Home.jsx"));
+const Customization = lazy(() => import("./pages/Customization.jsx"));
+const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
+const Features = lazy(() => import("./pages/Features.jsx"));
+const Pricing = lazy(() => import("./pages/Pricing.jsx"));
+const About = lazy(() => import("./pages/About.jsx"));
+const Contact = lazy(() => import("./pages/Contact.jsx"));
+const Privacy = lazy(() => import("./pages/Privacy.jsx"));
+const Legal = lazy(() => import("./pages/Legal.jsx"));
+const Tools = lazy(() => import("./pages/Tools.jsx"));
+const PromptLibrary = lazy(() => import("./pages/PromptLibrary.jsx"));
+const AppShell = lazy(() => import("./components/AppShell.jsx"));
 
 const App = () => {
-  const { userData } = useContext(userDataContext);
+  const { userData, isAuthLoading } = useContext(userDataContext);
+
+  if (isAuthLoading) {
+    return <AppLoader message="Verifying your session" />;
+  }
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          userData ? (
-            userData.assistantImage && userData.assistantName ? (
-              <Home />
+    <Suspense fallback={<AppLoader message="Loading application" />}>
+      <Routes>
+        <Route path="/" element={<AppShell />}>
+          <Route index element={<LandingPage />} />
+          <Route path="features" element={<Features />} />
+          <Route path="pricing" element={<Pricing />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="legal" element={<Legal />} />
+          <Route path="tools" element={<Tools />} />
+          <Route path="prompts" element={<PromptLibrary />} />
+        </Route>
+
+        <Route
+          path="/signup"
+          element={!userData ? <Signup /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/login"
+          element={!userData ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/customize"
+          element={userData ? <Customize /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/customization"
+          element={userData ? <Customization /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/assistant"
+          element={
+            userData ? (
+              userData.assistantImage && userData.assistantName ? (
+                <Home />
+              ) : (
+                <Navigate to="/customize" />
+              )
             ) : (
-              <Navigate to="/customize" />
+              <Navigate to="/login" />
             )
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={userData ? <Dashboard /> : <Navigate to="/login" />}
+        />
 
-      <Route
-        path="/signup"
-        element={!userData ? <Signup /> : <Navigate to="/" />}
-      />
-      <Route
-        path="/login"
-        element={!userData ? <Login /> : <Navigate to="/" />}
-      />
-      <Route
-        path="/customize"
-        element={userData ? <Customize /> : <Navigate to="/signup" />}
-      />
-      <Route
-        path="/customization"
-        element={userData ? <Customization /> : <Navigate to="/signup" />}
-      />
-
-      {/* Catch-all for unknown routes */}
-      {/* <Route path="*" element={<Navigate to="/login" />} /> */}
-    </Routes>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Suspense>
   );
 };
 

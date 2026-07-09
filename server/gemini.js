@@ -26,14 +26,14 @@ You are not Google. Your job is to classify voice input and respond with a JSON 
 Respond ONLY in this format:
 {
   "type": "general" | "Google Search" | "Youtube" | "youtube_play" |
-  "youtube_open" | "get_time" | "get_date" | "get_day" | "get_month" |
+  "youtube_open" | "open_youtube" | "get_time" | "get_date" | "get_day" | "get_month" |
   "calculator_open" | "instagram_open" | "facebook_open" | "weather_show",
   "userInput": "<cleaned user command>",
   "response": "<short spoken reply>"
 }
 
 Rules:
-- If user says "open YouTube", set "type": "youtube_open".
+- If user says "open YouTube", set "type": "open_youtube".
 - If user asks to search on Google or YouTube, extract only search terms in "userInput".
 - Don't include your name in "userInput".
 - Use ${userName} if user asks "who created you?"
@@ -67,7 +67,7 @@ Now reply.`.trim();
 
     console.log(
       "Raw Gemini API Response Data:",
-      JSON.stringify(response.data, null, 2)
+      JSON.stringify(response.data, null, 2),
     );
 
     if (
@@ -80,7 +80,7 @@ Now reply.`.trim();
     ) {
       console.error(
         "Gemini response structure is unexpected or empty:",
-        response.data
+        response.data,
       );
       return {
         type: "general",
@@ -96,7 +96,7 @@ Now reply.`.trim();
       geminiRawText = jsonMatch[1].trim();
     } else {
       console.warn(
-        "Gemini response not wrapped in ````json` block, attempting direct parse."
+        "Gemini response not wrapped in ````json` block, attempting direct parse.",
       );
     }
 

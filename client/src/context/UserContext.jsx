@@ -2,12 +2,13 @@
 import axios from "axios";
 import React, { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { requestAssistantReply } from "../services/assistantApi.js";
+import { getApiBaseUrl } from "../config/apiBaseUrl.js";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
-  const serverUrl = import.meta.env.VITE_SERVER_URL || "";
+  const serverUrl = getApiBaseUrl();
   const api = useMemo(
     () =>
       axios.create({

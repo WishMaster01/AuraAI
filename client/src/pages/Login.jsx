@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
 import { userDataContext } from "../context/UserContext.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { useToast } from "../context/ToastContext.jsx";
@@ -17,7 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { serverUrl, setUserData } = useContext(userDataContext);
+  const { api, setUserData } = useContext(userDataContext);
   const { showSuccess, showError } = useToast();
 
   const handleChange = (e) => {
@@ -30,9 +29,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const result = await axios.post(`${serverUrl}/api/auth/login`, formData, {
-        withCredentials: true,
-      });
+      const result = await api.post("/api/auth/login", formData);
       setUserData(result.data);
       showSuccess("Welcome back!");
       navigate("/assistant");

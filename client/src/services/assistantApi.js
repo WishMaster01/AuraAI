@@ -1,8 +1,9 @@
 import axios from "axios";
+import { getApiBaseUrl } from "../config/apiBaseUrl.js";
 
 const createFallbackClient = () =>
   axios.create({
-    baseURL: import.meta.env.VITE_SERVER_URL || "",
+    baseURL: getApiBaseUrl(),
     withCredentials: true,
   });
 

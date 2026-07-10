@@ -3,10 +3,19 @@ import generateToken from "../configs/token.js";
 import prisma from "../configs/prisma.js";
 import { serializeUser, userInclude } from "../utils/userSerializers.js";
 
+const getCookieSameSite = () => {
+  const configured = String(process.env.COOKIE_SAME_SITE || "").trim().toLowerCase();
+  if (configured) {
+    return configured;
+  }
+
+  return process.env.NODE_ENV === "production" ? "none" : "lax";
+};
+
 const getCookieOptions = () => ({
   httpOnly: true,
   maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: process.env.COOKIE_SAME_SITE || "lax",
+  sameSite: getCookieSameSite(),
   secure: process.env.NODE_ENV === "production",
   path: "/",
 });
@@ -91,7 +100,7 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: process.env.COOKIE_SAME_SITE || "lax",
+      sameSite: getCookieSameSite(),
       secure: process.env.NODE_ENV === "production",
       path: "/",
     });

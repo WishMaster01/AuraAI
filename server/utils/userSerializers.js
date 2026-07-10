@@ -20,6 +20,7 @@ export const serializeUser = (user) => {
   return {
     _id: user.id,
     id: user.id,
+    clerkId: user.clerkId || null,
     name: user.name,
     email: user.email,
     assistantName: user.assistantName,

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { clerkMiddleware } from "@clerk/express";
 
 import connectDB from "./configs/db.js";
 import { getAllowedOrigins, isAllowedOrigin } from "./configs/origins.js";
@@ -42,6 +43,7 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 app.set("trust proxy", 1);
 app.use(requestLogger);
+app.use(clerkMiddleware());
 app.use(corsGuard);
 app.use(cors(corsOptions));
 app.disable("x-powered-by");

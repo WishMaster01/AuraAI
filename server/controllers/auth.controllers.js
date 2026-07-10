@@ -80,6 +80,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "EMAIL DOES NOT EXISTS!" });
     }
 
+    if (!user.password) {
+      return res.status(400).json({
+        message:
+          "This account uses Clerk sign-in. Please continue with Google or email authentication.",
+      });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {

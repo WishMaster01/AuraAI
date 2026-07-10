@@ -1,15 +1,16 @@
-import jwt from "jsonwebtoken";
+import { resolveAuthenticatedUser } from "../services/authContext.service.js";
 
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
+    const authContext = await resolveAuthenticatedUser(req);
+    if (!authContext?.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    req.userId = verifyToken.userId;
+    req.userId = authContext.user.id;
+    req.user = authContext.user;
+    req.authProvider = authContext.provider;
+    req.clerkUserId = authContext.clerkUserId;
 
     return next();
   } catch (error) {

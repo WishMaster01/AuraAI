@@ -23,7 +23,7 @@ import QuickActions from "../components/assistant/QuickActions.jsx";
 import PageAssistant from "../components/assistant/PageAssistant.jsx";
 
 const Home = () => {
-  const { userData, setUserData, api } = useContext(userDataContext);
+  const { userData, setUserData, api, signOut } = useContext(userDataContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [chats, setChats] = useState([]);
@@ -139,7 +139,7 @@ const Home = () => {
 
   const handleLogout = async () => {
     try {
-      await api.get("/api/auth/logout");
+      await signOut();
       setUserData(null);
       navigate("/login");
     } catch {

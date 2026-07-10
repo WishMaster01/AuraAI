@@ -1,6 +1,7 @@
 // UserContext.jsx
 import axios from "axios";
 import React, { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth, useClerk } from "@clerk/react";
 import { requestAssistantReply } from "../services/assistantApi.js";
 import { getApiBaseUrl } from "../config/apiBaseUrl.js";
 
@@ -8,6 +9,8 @@ import { getApiBaseUrl } from "../config/apiBaseUrl.js";
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
+  const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { signOut } = useClerk();
   const serverUrl = getApiBaseUrl();
   const api = useMemo(
     () =>
@@ -24,7 +27,30 @@ function UserContext({ children }) {
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  useEffect(() => {
+    const interceptor = api.interceptors.request.use(async (config) => {
+      if (isSignedIn) {
+        const token = await getToken();
+        if (token) {
+          config.headers = config.headers || {};
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      }
+
+      return config;
+    });
+
+    return () => {
+      api.interceptors.request.eject(interceptor);
+    };
+  }, [api, getToken, isSignedIn]);
+
   const handleCurrentUser = useCallback(async () => {
+    if (!isLoaded || !isSignedIn) {
+      setUserData(null);
+      return null;
+    }
+
     setIsAuthLoading(true);
     try {
       const result = await api.get("/api/user/current");
@@ -37,16 +63,15 @@ function UserContext({ children }) {
     } finally {
       setIsAuthLoading(false);
     }
-  }, [api]);
+  }, [api, isLoaded, isSignedIn]);
 
   const getGeminiResponse = async (command) => {
-    if (!userData) {
+    if (!isLoaded || !isSignedIn || !userData) {
       console.warn("User data not loaded yet for Gemini request.");
       return {
         type: "general",
         userInput: command,
-        response:
-          "User data not loaded yet. Please try again after logging in.",
+        response: "Sign in first to use the assistant.",
       };
     }
 
@@ -73,12 +98,22 @@ function UserContext({ children }) {
   };
 
   useEffect(() => {
+    if (!isLoaded) return;
+
+    if (!isSignedIn) {
+      setUserData(null);
+      setIsAuthLoading(false);
+      return;
+    }
+
     handleCurrentUser();
-  }, [handleCurrentUser]);
+  }, [handleCurrentUser, isLoaded, isSignedIn]);
 
   const value = {
     api,
     serverUrl,
+    isClerkLoaded: isLoaded,
+    isSignedIn,
     userData,
     setUserData,
     isAuthLoading,
@@ -90,6 +125,7 @@ function UserContext({ children }) {
     setSelectedImage,
     getGeminiResponse,
     handleCurrentUser,
+    signOut,
   };
 
   return (

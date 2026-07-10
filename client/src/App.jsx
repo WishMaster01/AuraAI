@@ -21,7 +21,7 @@ const PromptLibrary = lazy(() => import("./pages/PromptLibrary.jsx"));
 const AppShell = lazy(() => import("./components/AppShell.jsx"));
 
 const App = () => {
-  const { userData, isAuthLoading } = useContext(userDataContext);
+  const { userData, isAuthLoading, isSignedIn } = useContext(userDataContext);
 
   if (isAuthLoading) {
     return <AppLoader message="Verifying your session" />;
@@ -44,25 +44,25 @@ const App = () => {
 
         <Route
           path="/signup"
-          element={!userData ? <Signup /> : <Navigate to="/" />}
+          element={!isSignedIn ? <Signup /> : <Navigate to="/assistant" />}
         />
         <Route
           path="/login"
-          element={!userData ? <Login /> : <Navigate to="/" />}
+          element={!isSignedIn ? <Login /> : <Navigate to="/assistant" />}
         />
         <Route
           path="/customize"
-          element={userData ? <Customize /> : <Navigate to="/login" />}
+          element={isSignedIn ? <Customize /> : <Navigate to="/login" />}
         />
         <Route
           path="/customization"
-          element={userData ? <Customization /> : <Navigate to="/login" />}
+          element={isSignedIn ? <Customization /> : <Navigate to="/login" />}
         />
         <Route
           path="/assistant"
           element={
-            userData ? (
-              userData.assistantImage && userData.assistantName ? (
+            isSignedIn ? (
+              userData?.assistantImage && userData?.assistantName ? (
                 <Home />
               ) : (
                 <Navigate to="/customize" />
@@ -74,7 +74,7 @@ const App = () => {
         />
         <Route
           path="/dashboard"
-          element={userData ? <Dashboard /> : <Navigate to="/login" />}
+          element={isSignedIn ? <Dashboard /> : <Navigate to="/login" />}
         />
 
         <Route path="*" element={<Navigate to="/" />} />

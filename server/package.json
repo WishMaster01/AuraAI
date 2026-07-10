@@ -16,6 +16,7 @@
     "test:api": "node --test tests/api/auth.test.js tests/api/chat.test.js"
   },
   "dependencies": {
+    "@clerk/express": "^2.1.39",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "axios": "^1.10.0",

@@ -25,6 +25,9 @@ const Login = () => {
           routing="path"
           path="/login"
           signUpUrl="/signup"
+          forceRedirectUrl="/sso-callback"
+          fallbackRedirectUrl="/"
+          signUpForceRedirectUrl="/sso-callback"
           appearance={{
             layout: {
               socialButtonsPlacement: "top",

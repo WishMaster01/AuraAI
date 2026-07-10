@@ -18,12 +18,14 @@ const Privacy = lazy(() => import("./pages/Privacy.jsx"));
 const Legal = lazy(() => import("./pages/Legal.jsx"));
 const Tools = lazy(() => import("./pages/Tools.jsx"));
 const PromptLibrary = lazy(() => import("./pages/PromptLibrary.jsx"));
+const SSOCallback = lazy(() => import("./pages/SSOCallback.jsx"));
 const AppShell = lazy(() => import("./components/AppShell.jsx"));
 
 const App = () => {
-  const { userData, isAuthLoading, isSignedIn } = useContext(userDataContext);
+  const { userData, isAuthLoading, isSignedIn, isClerkLoaded } =
+    useContext(userDataContext);
 
-  if (isAuthLoading) {
+  if (!isClerkLoaded || isAuthLoading) {
     return <AppLoader message="Verifying your session" />;
   }
 
@@ -76,6 +78,7 @@ const App = () => {
           path="/dashboard"
           element={isSignedIn ? <Dashboard /> : <Navigate to="/login" />}
         />
+        <Route path="/sso-callback" element={<SSOCallback />} />
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

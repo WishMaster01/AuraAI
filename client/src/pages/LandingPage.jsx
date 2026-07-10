@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useUser } from "@clerk/react";
 import {
   ArrowRight,
   Bot,
@@ -60,6 +61,8 @@ const workflow = [
 
 const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState(0);
+  const { isLoaded: isClerkLoaded, isSignedIn, user } = useUser();
+  const signedInUser = isClerkLoaded && isSignedIn ? user : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:py-12 lg:px-6">
@@ -77,20 +80,68 @@ const LandingPage = () => {
             translations, and smart browser workflows in one responsive
             interface.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/signup"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-300 via-teal-300 to-amber-200 px-5 py-3 text-sm font-bold text-slate-950 shadow-[0_16px_42px_rgba(34,211,238,0.18)] transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              Start Free <ArrowRight size={16} />
-            </Link>
-            <Link
-              to="/features"
-              className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-bold text-slate-100 transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
-            >
-              Explore Features
-            </Link>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            {signedInUser ? (
+              <>
+                <Link
+                  to="/assistant"
+                  className="inline-flex items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-cyan-300 via-teal-300 to-amber-200 px-5 py-3 text-sm font-bold text-slate-950 shadow-[0_16px_42px_rgba(34,211,238,0.18)] transition hover:-translate-y-0.5 hover:brightness-110"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-slate-900/10 bg-slate-950/30">
+                    {signedInUser.imageUrl ? (
+                      <img
+                        src={signedInUser.imageUrl}
+                        alt={signedInUser.fullName || signedInUser.firstName || "User avatar"}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-xs font-black text-slate-950">
+                        {(signedInUser.firstName || "U").charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </span>
+                  Open Assistant
+                </Link>
+                <Link
+                  to="/features"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-bold text-slate-100 transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
+                >
+                  Explore Features
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-300 via-teal-300 to-amber-200 px-5 py-3 text-sm font-bold text-slate-950 shadow-[0_16px_42px_rgba(34,211,238,0.18)] transition hover:-translate-y-0.5 hover:brightness-110"
+                >
+                  Start Free <ArrowRight size={16} />
+                </Link>
+                <Link
+                  to="/features"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-bold text-slate-100 transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
+                >
+                  Explore Features
+                </Link>
+              </>
+            )}
           </div>
+          {signedInUser && (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100">
+              <span className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-slate-950/30">
+                {signedInUser.imageUrl ? (
+                  <img
+                    src={signedInUser.imageUrl}
+                    alt={signedInUser.fullName || signedInUser.firstName || "User avatar"}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span>{(signedInUser.firstName || "U").charAt(0).toUpperCase()}</span>
+                )}
+              </span>
+              Signed in as {signedInUser.fullName || signedInUser.firstName || signedInUser.username || "user"}
+            </div>
+          )}
           <div className="mt-8 grid max-w-xl grid-cols-3 gap-3 text-center">
             {[
               ["6", "quick tools"],

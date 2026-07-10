@@ -1,15 +1,18 @@
 // UserContext.jsx
 import axios from "axios";
 import React, { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { useAuth, useClerk } from "@clerk/react";
+import { useAuth, useClerk, useUser } from "@clerk/react";
 import { requestAssistantReply } from "../services/assistantApi.js";
 import { getApiBaseUrl } from "../config/apiBaseUrl.js";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const userDataContext = createContext();
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function UserContext({ children }) {
   const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { isLoaded: isUserLoaded, user } = useUser();
   const { signOut } = useClerk();
   const serverUrl = getApiBaseUrl();
   const api = useMemo(
@@ -53,8 +56,36 @@ function UserContext({ children }) {
 
     setIsAuthLoading(true);
     try {
-      const result = await api.get("/api/user/current");
-      setUserData(result.data);
+      let lastError = null;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        const token = await getToken();
+        if (!token) {
+          lastError = new Error("Clerk session token is not ready yet.");
+          await sleep(250 * (attempt + 1));
+          continue;
+        }
+
+        try {
+          const result = await api.get("/api/user/current", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserData(result.data);
+          return result.data;
+        } catch (error) {
+          lastError = error;
+          if (error?.response?.status !== 401 || attempt === 3) {
+            throw error;
+          }
+
+          await sleep(300 * (attempt + 1));
+        }
+      }
+
+      if (lastError) {
+        throw lastError;
+      }
     } catch (error) {
       setUserData(null);
       if (error?.response?.status !== 401) {
@@ -63,7 +94,7 @@ function UserContext({ children }) {
     } finally {
       setIsAuthLoading(false);
     }
-  }, [api, isLoaded, isSignedIn]);
+  }, [api, getToken, isLoaded, isSignedIn]);
 
   const getGeminiResponse = async (command) => {
     if (!isLoaded || !isSignedIn || !userData) {
@@ -98,7 +129,7 @@ function UserContext({ children }) {
   };
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !isUserLoaded) return;
 
     if (!isSignedIn) {
       setUserData(null);
@@ -107,7 +138,7 @@ function UserContext({ children }) {
     }
 
     handleCurrentUser();
-  }, [handleCurrentUser, isLoaded, isSignedIn]);
+  }, [handleCurrentUser, isLoaded, isSignedIn, isUserLoaded, user?.id]);
 
   const value = {
     api,

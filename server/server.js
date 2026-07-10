@@ -43,7 +43,12 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 app.set("trust proxy", 1);
 app.use(requestLogger);
-app.use(clerkMiddleware());
+app.use(
+  clerkMiddleware({
+    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  })
+);
 app.use(corsGuard);
 app.use(cors(corsOptions));
 app.disable("x-powered-by");

@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useContext, useState } from "react";
+import { useUser } from "@clerk/react";
 import {
   Menu,
   X,
@@ -26,6 +27,8 @@ const navItems = [
 const AppShell = () => {
   const [open, setOpen] = useState(false);
   const { userData } = useContext(userDataContext);
+  const { isLoaded: isClerkLoaded, isSignedIn, user } = useUser();
+  const signedInUser = isClerkLoaded && isSignedIn ? user : null;
 
   return (
     <div className="aura-page min-h-screen pb-20 text-slate-100 md:pb-0">
@@ -58,17 +61,41 @@ const AppShell = () => {
                       : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
                   }`
                 }
-              >
-                {item.label}
-              </NavLink>
+                >
+                  {item.label}
+                </NavLink>
             ))}
-            <Link
-              to={userData ? "/assistant" : "/login"}
-              className="ml-2 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-300 via-teal-300 to-amber-200 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-[0_14px_34px_rgba(34,211,238,0.18)] transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              <WandSparkles size={16} />
-              {userData ? "Open App" : "Get Started"}
-            </Link>
+            {signedInUser ? (
+              <Link
+                to="/assistant"
+                className="ml-2 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.05] px-2.5 py-2 text-sm font-semibold text-slate-100 transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
+              >
+                <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-slate-900/80">
+                  {signedInUser.imageUrl ? (
+                    <img
+                      src={signedInUser.imageUrl}
+                      alt={signedInUser.fullName || signedInUser.firstName || "User avatar"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-cyan-200">
+                      {(signedInUser.firstName || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </span>
+                <span className="max-w-36 truncate">
+                  {signedInUser.fullName || signedInUser.firstName || "Open App"}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                to={userData ? "/assistant" : "/login"}
+                className="ml-2 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-300 via-teal-300 to-amber-200 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-[0_14px_34px_rgba(34,211,238,0.18)] transition hover:-translate-y-0.5 hover:brightness-110"
+              >
+                <WandSparkles size={16} />
+                Get Started
+              </Link>
+            )}
           </div>
         </nav>
         {open && (

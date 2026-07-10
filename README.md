@@ -1,102 +1,23 @@
-# AuraAI - AI-Powered Voice Assistant
+﻿# AuraAI
 
-A modern, intelligent voice assistant built with React, Node.js, and Google Gemini AI. Create your personalized AI assistant with custom names and images.
+AuraAI is a premium AI-powered Chrome assistant for browser workflows, assistant chat, page-aware actions, voice commands, and productivity automation. It is built as a split deployment:
 
-## ✨ Features
+- `client/` on Vercel
+- `server/` on Render
+- PostgreSQL on Neon
 
-- 🎤 **Voice Recognition**: Natural voice interaction with your AI assistant
-- 🎨 **Customizable Assistant**: Choose your assistant's name and avatar
-- 🧠 **AI-Powered**: Powered by Google Gemini AI for intelligent responses
-- 🌐 **Web Integration**: Open websites, search, and perform various tasks
-- 📱 **Responsive Design**: Beautiful UI that works on all devices
-- 🔐 **Secure Authentication**: JWT-based authentication with cookies
-- ☁️ **Cloud Storage**: Image uploads with Cloudinary integration
+## Overview
 
-## 🚀 Quick Start
+AuraAI combines a modern SaaS-style interface with backend-driven AI features for:
 
-### Prerequisites
+- chat sessions
+- summarize, rewrite, explain, translate, and brainstorm actions
+- page-aware assistant behavior
+- voice command handling
+- assistant customization
+- secure authentication and protected routes
 
-- Node.js (v16 or higher)
-- PostgreSQL database
-- Google Gemini API key
-- Cloudinary account (for image uploads)
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd AuraAI
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   # Install server dependencies
-   cd server
-   npm install
-
-   # Install client dependencies
-   cd ../client
-   npm install
-   ```
-
-3. **Environment Setup**
-
-   Create a `.env` file in the `server` directory:
-
-   ```env
-   DATABASE_URL=your_neon_postgresql_connection_string
-   JWT_SECRET=your_jwt_secret_key
-   GEMINI_API_KEY=your_gemini_api_key
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   PORT=8080
-   CLIENT_ORIGIN=http://localhost:5173
-   ```
-
-4. **Initialize the database**
-
-   ```bash
-   cd server
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
-
-5. **Run the application**
-
-   **Terminal 1 - Start the server:**
-
-   ```bash
-   cd server
-   npm run server
-   ```
-
-   **Terminal 2 - Start the client:**
-
-   ```bash
-   cd client
-   npm run dev
-   ```
-
-6. **Access the application**
-   - Frontend: http://localhost:5173
-   - Backend: http://localhost:8080
-
-## 🎯 Usage
-
-1. **Sign Up**: Create a new account with your email and password
-2. **Customize**: Choose your assistant's name and avatar image
-3. **Interact**: Start the assistant and begin voice conversations
-4. **Commands**: Try commands like:
-   - "Open YouTube"
-   - "Search for [query]"
-   - "What's the time?"
-   - "Open Instagram"
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -105,91 +26,243 @@ A modern, intelligent voice assistant built with React, Node.js, and Google Gemi
 - Tailwind CSS
 - React Router
 - Axios
-- Lucide React Icons
+- Lucide React
 
 ### Backend
 
 - Node.js
-- Express.js
-- PostgreSQL with Prisma
-- JWT Authentication
-- Cloudinary
-- Google Gemini AI
+- Express
+- Prisma
+- PostgreSQL
+- Neon
+- JWT auth with cookies
+- CORS, CSP, request logging, and security headers
 
-## 📁 Project Structure
+### Tooling
 
-```
+- GitHub Actions
+- Playwright scaffold
+- ESLint
+- npm audit
+- Render deployment for the server
+- Vercel deployment for the client
+
+## Repository Structure
+
+```txt
 AuraAI/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── context/        # React contexts
-│   │   ├── pages/          # Page components
-│   │   └── assets/         # Static assets
-│   └── package.json
-├── server/                 # Node.js backend
-│   ├── configs/           # Configuration files
-│   ├── controllers/       # Route controllers
-│   ├── middlewares/       # Custom middlewares
-│   ├── models/            # Database models
-│   ├── routes/            # API routes
-│   └── server.js          # Main server file
-└── README.md
+|-- client/        # React frontend
+|-- server/        # Express + Prisma backend
+|-- api/           # Vercel API bridge when needed
+|-- .github/       # CI workflow
+|-- README.md
 ```
 
-## 🔧 API Endpoints
+## Key Features
 
-### Authentication
+### Assistant
 
-- `POST /api/auth/signup` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/logout` - User logout
+- multi-session chat
+- page-aware responses
+- rewrite, summarize, translate, explain, and draft tools
+- voice input support
+- quick actions and command-style input
 
-### User Management
+### UI
 
-- `GET /api/user/current` - Get current user
-- `POST /api/user/update` - Update assistant details
-- `POST /api/user/asktoassistant` - Send command to assistant
+- dark-first premium design
+- glassmorphism panels
+- gradient accents
+- responsive layouts for mobile, tablet, laptop, and desktop
+- compact extension-friendly assistant screens
 
-## 🎨 Customization
+### Security
 
-The application supports:
+- HTTP-only cookies
+- protected auth flows
+- strict CORS allowlist
+- security headers and CSP
+- request logging
+- rate limiting
 
-- Custom assistant names
-- Custom avatar images (upload or choose from gallery)
-- Personalized AI responses
-- Voice command recognition
+## Local Development
 
-## 🚀 Deployment
+### Prerequisites
 
-### Frontend (Vercel/Netlify)
+- Node.js 20+ or 22+
+- npm
+- Neon PostgreSQL database
+- Render backend deployment or local backend setup
 
-1. Build the client: `cd client && npm run build`
-2. Deploy the `dist` folder to your hosting service
+### Install dependencies
 
-### Backend (Railway/Heroku)
+```bash
+cd server
+npm install
 
-1. Set environment variables in your hosting platform
-2. Deploy the `server` folder
+cd ../client
+npm install
+```
 
-## 🤝 Contributing
+### Environment variables
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+#### `client/.env`
 
-## 📄 License
+```env
+VITE_SERVER_URL=https://your-render-backend.onrender.com
+```
 
-This project is licensed under the ISC License.
+#### `server/.env`
 
-## 🙏 Acknowledgments
+```env
+PORT=8080
+DATABASE_URL=postgresql://...
+TEST_DATABASE_URL=postgresql://...
+JWT_SECRET=your_jwt_secret
+CLIENT_URL=https://your-vercel-app.vercel.app
+CLIENT_ORIGINS=https://your-vercel-app.vercel.app,http://localhost:5173
+COOKIE_SAME_SITE=none
+NODE_ENV=production
+GEMINI_API_KEY=your_gemini_key
+OPENROUTER_API_KEY=
+```
 
-- Google Gemini AI for intelligent responses
-- Cloudinary for image storage
-- React and Node.js communities
-- All open-source contributors
+Do not commit secrets to the repository.
 
----
+### Database setup
 
-**Made with ❤️ by WishMaster01**
+From `server/`:
+
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
+
+For production:
+
+```bash
+npx prisma migrate deploy
+```
+
+## Run Locally
+
+### Start the backend
+
+```bash
+cd server
+npm run dev
+```
+
+### Start the frontend
+
+```bash
+cd client
+npm run dev
+```
+
+## Available Scripts
+
+### Client
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+npm run test:e2e
+```
+
+### Server
+
+```bash
+npm run dev
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:deploy
+npm run test
+npm run test:api
+```
+
+## Deployment
+
+### Server on Render
+
+1. Deploy the `server/` directory.
+2. Add production environment variables.
+3. Point `DATABASE_URL` to Neon.
+4. Set `CLIENT_ORIGINS` to your Vercel domain and local dev domains if needed.
+5. Ensure cookies are configured for cross-origin auth.
+
+### Client on Vercel
+
+1. Deploy the `client/` directory.
+2. Set `VITE_SERVER_URL` to your Render backend URL.
+3. Use the Vite build output directory: `dist`.
+
+Recommended Vercel settings:
+
+- Root Directory: `client`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+## API Surface
+
+### Auth
+
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `GET /api/auth/logout`
+
+### User
+
+- `GET /api/user/current`
+- `POST /api/user/update`
+- `GET /api/user/chats`
+- `POST /api/user/chats`
+- `PATCH /api/user/chats/:id`
+- `DELETE /api/user/chats/:id`
+
+### Assistant
+
+- `POST /api/assistant/respond`
+- `POST /api/assistant/classify`
+
+## Troubleshooting
+
+### Login or signup fails
+
+- verify `VITE_SERVER_URL` points to the Render backend
+- confirm `CLIENT_ORIGINS` includes your Vercel domain
+- set `COOKIE_SAME_SITE=none` for production cross-site cookies
+- confirm `NODE_ENV=production` on Render
+
+### White screen on Vercel
+
+- check browser console errors
+- verify the client build completed successfully
+- ensure the Vercel project is rooted at `client/`
+- confirm the deployed app can reach the backend URL
+
+### API requests fail
+
+- verify the Render server is running
+- check CORS allowlist values
+- confirm cookies are being sent with credentials
+- review server logs for authentication or Prisma errors
+
+### Database issues
+
+- confirm Neon connection strings are correct
+- run Prisma migrations
+- regenerate Prisma client after schema changes
+
+## Contributing
+
+1. Create a feature branch.
+2. Keep UI changes isolated from backend logic unless required.
+3. Do not expose secrets in commits.
+4. Run lint/build/tests before opening a PR.
+
+## License
+
+ISC
